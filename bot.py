@@ -15,7 +15,7 @@ async def hello(ctx):
     await ctx.send("Hello! I am alive 🚀")
 
 def main():
-    TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+    TOKEN = os.getenv("TOKEN")
     if not TOKEN:
         raise ValueError("No DISCORD_BOT_TOKEN environment variable set")
     bot.run(TOKEN)
