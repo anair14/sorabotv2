@@ -15,7 +15,7 @@ async def on_ready():
 # Async function to load cogs
 async def load_cogs():
     # List of cog names to load
-    cogs = ["cogs.announcements", "cogs.util"]
+    cogs = ["cogs.announcements", "cogs.util", "cogs.trading"]
     
     for cog in cogs:
         try:
