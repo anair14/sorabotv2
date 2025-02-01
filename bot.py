@@ -1,53 +1,41 @@
+import os
 import discord
-from discord.ext import commands, tasks
-from yahoo_fin import stock_info as si
+from discord.ext import commands
 
-class Trading(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.futures_data = {}  # Stores the latest prices
-        self.update_prices.start()  # Start the price update loop
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True  # Enable message content intent
 
-    def cog_unload(self):
-        """Stops the loop when the cog is unloaded."""
-        self.update_prices.cancel()
+bot = commands.Bot(command_prefix="!", intents=intents)
 
-    @tasks.loop(seconds=5)
-    async def update_prices(self):
-        """Fetches futures prices every 5 seconds and updates the cache."""
-        futures_mapping = {
-            "ES": "^GSPC",   # S&P 500
-            "NQ": "^NDX",    # Nasdaq 100
-            "GC": "GC=F",    # Gold
-            "CL": "CL=F",    # Crude Oil
-            "YM": "YM=F",    # Dow Jones
-            "SI": "SI=F",    # Silver
-        }
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user}!")
 
-        for symbol, ticker in futures_mapping.items():
-            try:
-                self.futures_data[symbol] = si.get_live_price(ticker)
-            except Exception as e:
-                print(f"Error updating {symbol}: {e}")
+# Async function to load cogs
+async def load_cogs():
+    # List of cog names to load
+    cogs = ["cogs.announcements", "cogs.util", "cogs.trading"]
+    
+    for cog in cogs:
+        try:
+            await bot.load_extension(cog)  # Await loading cogs asynchronously
+            print(f"Loaded cog: {cog}")
+        except Exception as e:
+            print(f"Failed to load cog {cog}: {e}")
 
-    @commands.command(name="prices")
-    async def get_futures_price(self, ctx, symbol: str):
-        """Sends the latest futures price in an embed."""
-        symbol = symbol.upper()
-        if symbol not in self.futures_data:
-            await ctx.send("Invalid symbol! Available options: ES, NQ, GC, CL, YM, SI")
-            return
+# Main async function to run the bot
+async def main():
+    # Load cogs asynchronously
+    await load_cogs()
 
-        price = self.futures_data.get(symbol, "Unavailable")
+    # Run the bot
+    TOKEN = os.getenv("TOKEN")
+    if not TOKEN:
+        raise ValueError("No DISCORD_BOT_TOKEN environment variable set")
+    
+    await bot.start(TOKEN)  # Use `await bot.start()` instead of `bot.run()`
 
-        embed = discord.Embed(
-            title=f"{symbol} Futures Price",
-            description=f"💰 **${price:.2f}**",
-            color=discord.Color.blue()
-        )
-        embed.set_footer(text="Updated every 5 seconds | Data from Yahoo Finance")
-        
-        await ctx.send(embed=embed)
-
-async def setup(bot):
-    await bot.add_cog(Trading(bot))
+if __name__ == "__main__":
+    # Run the main async function with asyncio.run()
+    asyncio.run(main())
