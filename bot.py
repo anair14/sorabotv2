@@ -8,14 +8,18 @@ intents.message_content = True  # Enable message content intent
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-def load_cogs():
+# Async function to load cogs
+async def load_cogs():
+    # List of cog names to load
     cogs = ["cogs.announcements", "cogs.util"]
+    
     for cog in cogs:
         try:
-            bot.load_extension(cog)
+            await bot.load_extension(cog)  # Make sure to await loading cogs
             print(f"Loaded cog: {cog}")
         except Exception as e:
             print(f"Failed to load cog {cog}: {e}")
+
 
 @bot.event
 async def on_ready():
