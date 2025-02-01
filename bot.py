@@ -1,45 +1,21 @@
-"""
-Author: Ashwin Nair
-Date: 2025-01-30
-Project name: bot.py
-Summary: Main file for the bot.
-"""
-
+import os
 import discord
 from discord.ext import commands
-import json
-import os
 
-
-TOKEN = os.getenv('TOKEN')
-
-# Load configuration
-with open("config.json") as config_file:
-    config = json.load(config_file)
-
-# Enable all intents
 intents = discord.Intents.default()
-intents.messages = True  # Ensure message-related events are enabled
-intents.message_content = True  # Required for reading message content in commands
-
-# Bot setup
-bot = commands.Bot(command_prefix=config["prefix"], intents=intents)
-
-# Load cogs asynchronously
-async def load_extensions():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')
+intents.messages = True
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'✅ Logged in as {bot.user}')
+    print(f'Logged in as {bot.user}!')
 
-async def main():
-    async with bot:
-        await load_extensions()
-        await bot.start(TOKEN)
+@bot.command()
+async def hello(ctx):
+    await ctx.send("Hello! I am alive 🚀")
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+def main():
+    TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+    if not TOKEN:
+        raise ValueError("No DISCORD_BOT_TOKEN environment variable set")
+    bot.run(TOKEN)
