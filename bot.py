@@ -30,7 +30,7 @@ async def hello(ctx):
     await ctx.send("Hello! I am alive 🚀")
 
 def main():
-    load_cogs()
+    bot.loop.create_task(load_cogs())
     TOKEN = os.getenv("TOKEN")
     if not TOKEN:
         raise ValueError("No DISCORD_BOT_TOKEN environment variable set")
