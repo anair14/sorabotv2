@@ -30,7 +30,7 @@ async def main():
     await load_cogs()
 
     # Run the bot
-    TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+    TOKEN = os.getenv("TOKEN")
     if not TOKEN:
         raise ValueError("No DISCORD_BOT_TOKEN environment variable set")
     
