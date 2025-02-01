@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 your_bot.py
+python3 ./sorabot/bot.py
