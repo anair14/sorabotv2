@@ -1,6 +1,25 @@
+"""
+Author: Ashwin Nair
+Date: 2025-02-03
+Project name: trading.py
+Summary: Enter summary here.
+"""
+
 import discord
 from discord.ext import commands, tasks
 from yahoo_fin import stock_info as si
+
+# Monkey patch for deprecated .iloc indexing issue
+import pandas as pd
+
+# Define a patch function to prevent future indexing errors
+def patched_loc_getitem(self, key):
+    try:
+        return pd.DataFrame.loc.__getitem__(self, key)
+    except KeyError:
+        return None
+
+pd.DataFrame.loc_getitem = patched_loc_getitem
 
 class Trading(commands.Cog):
     def __init__(self, bot):
