@@ -15,6 +15,13 @@ class Announcements(commands.Cog):
     @commands.command(name='announce')
     async def announce(self, ctx, *, message: str):
         """Delete the user's message and resend it as an embedded announcement."""
+        role_name = "Executive"
+        user_roles = [role.name.lower() for role in ctx.author.roles]
+
+        if role_name not in user_roles:
+            await ctx.send("Access denied. You need the 'executive' role to use this command.")
+            return
+
         await ctx.message.delete()
 
         embed = discord.Embed(
@@ -29,6 +36,13 @@ class Announcements(commands.Cog):
     @commands.command(name='call')
     async def call(self, ctx, symbol: str, number: int, position: str, priority: str = None):
         """Send a stock trading signal in the format: !call SYMBOL NUMBER LONG/SHORT [P for priority]"""
+        
+        role_name = "Executive"
+        user_roles = [role.name.lower() for role in ctx.author.roles]
+
+        if role_name not in user_roles:
+            await ctx.send("Access denied. You need the 'executive' role to use this command.")
+            return
 
         # Validate position argument
         if position.lower() not in ['long', 'short']:
