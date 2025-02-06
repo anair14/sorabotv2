@@ -23,7 +23,7 @@ intents.messages = True  # Ensure message-related events are enabled
 intents.message_content = True  # Required for reading message content in commands
 
 # Bot setup
-bot = commands.Bot(command_prefix=config["prefix"], intents=intents)
+bot = commands.Bot(command_prefix=config["prefix"], intents=intents, help_command=None)
 
 # Load cogs asynchronously
 async def load_extensions():
@@ -43,4 +43,3 @@ async def main():
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
-
