@@ -18,7 +18,7 @@ class Utility(commands.Cog):
         latency = round(self.bot.latency * 1000)  # Convert to ms
         await ctx.send(f'🏓 Pong! Latency: {latency}ms')
 
-    @commands.command(name='helpme')
+    @commands.command(name='help')
     async def help_command(self, ctx):
         """Dynamic help command listing all available commands in an embed."""
         help_embed = discord.Embed(
