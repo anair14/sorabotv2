@@ -21,17 +21,17 @@ class Announcements(commands.Cog):
         if role_name not in user_roles:
             await ctx.send("Access denied. You need the 'executive' role to use this command.")
             return
+        else:
+            await ctx.message.delete()
 
-        await ctx.message.delete()
+            embed = discord.Embed(
+                title="📢 Announcement",
+                description=message,
+                color=discord.Color.blue()
+            )
+            embed.set_footer(text=f"Announced by {ctx.author.display_name}")
 
-        embed = discord.Embed(
-            title="📢 Announcement",
-            description=message,
-            color=discord.Color.blue()
-        )
-        embed.set_footer(text=f"Announced by {ctx.author.display_name}")
-
-        await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
 
     @commands.command(name='call')
     async def call(self, ctx, symbol: str, number: int, position: str, priority: str = None):
